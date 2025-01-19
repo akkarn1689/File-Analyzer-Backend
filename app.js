@@ -17,7 +17,7 @@ const server = http.createServer(app);
 require("dotenv").config();
 
 const corsOptions = {
-  origin: 'http://localhost:5173',
+  origin: 'https://file-analyzer-6pnj.onrender.com/',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
   exposedHeaders: ['Authorization'],
