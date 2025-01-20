@@ -5,79 +5,105 @@ const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY);
 
 async function processWithGemini(base64File, mimeType) {
     const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-    const prompt = `Please perform a comprehensive extraction of ALL information present in this document and include a detailed summary.
+    const prompt = `Please analyze the provided social media content and generate a comprehensive analysis with three main sections: Description, Information, and Recommendations.
 
-EXTRACTION GUIDELINES:
+ANALYSIS GUIDELINES:
 
-1. DOCUMENT SUMMARY:
-   - Provide a comprehensive overview of the document
-   - Include document type and main purpose
-   - Summarize key points and findings
-   - Identify primary topics or themes
-   - Note significant patterns or trends
-   - Highlight critical information
-   - Describe document structure and organization
+1. STRUCTURE REQUIREMENTS:
+   - Always include the three main sections: Description, Information, and Recommendations
+   - Only include keys where data is actually present in the content
+   - Use proper English words with first letter capitalized for all keys
+   - Omit any keys or sections where no information is found
 
-2. SCOPE:
-   - Extract ALL information found in the document
-   - Do not limit to predefined categories
-   - Capture every detail, no matter how minor
-   - Include both explicit and implicit information
-   - Document any contextual relationships
+2. COMPREHENSIVE DATA EXTRACTION:
+   - Extract EVERY piece of information present in the content
+   - Analyze both visible content and metadata
+   - Capture all available metrics and data points
+   - Document relationships between different data elements
+   - Include all technical and contextual information
 
-3. DATA TYPES TO CAPTURE:
-   - Any names, titles, or identifiers
-   - All dates in any format
-   - Every numerical value encountered
-   - Any locations or geographical references
-   - All contact information
-   - Any categorical or descriptive information
-   - Technical specifications or measurements
-   - Status indicators or flags
-   - References to documents or external sources
-   - Time-related information
-   - Any relationships or connections mentioned
-   - System-specific identifiers or codes
-   - Any metadata present in the document
+3. OUTPUT FORMAT:
+{
+  "Description": {
+    "Summary": "Comprehensive description",
+    "Audience": "Identified audience",
+    "Context": "Contextual information"
+  },
+  "Information": {
+    "Message": {
+      "Content": "Primary content text",
+      "Discussions": [],
+      "Responses": [],
+      "Descriptions": []
+    },
+    "Multimedia": {
+      "Categories": [],
+      "Characteristics": {}
+    },
+    "Creator": {
+      "Publishers": [],
+      "References": [],
+      "Engagements": []
+    },
+    "Timing": {
+      "Published": "",
+      "Modifications": [],
+    },
+    "Performance": {
+      
+    },
+    "Specifications": {
+      "Device": {}
+    },
+    "Attributes": {
+      "Details": {}
+    },
+    "Connections": {
+      "Websites": [],
+      "Sources": [],
+      "Related": []
+    },
+    "Additional": {
+      // Any additional data not fitting above categories
+    }
+  },
+  "Recommendations": {
+    "Immediate": ["Immediate improvement opportunities"],
+    "Strategic": ["Long-term suggestions"],
+    "Schedule": {
+      // Timing recommendations based on analyzed data
+    },
+    "Enhancements": ["Content enhancement suggestions"],
+    "Targeting": ["Audience engagement tips"],
+    "Optimization": ["Platform optimization tips"]
+  }
+}
 
-4. OUTPUT FORMAT:
-   Format as a clean JSON with these rules:
-   {
-     "document_summary": {
-       "type": "Document type/category",
-       "overview": "Comprehensive document description",
-       "key_points": ["Array of main findings/points"],
-       "main_topics": ["Primary themes/subjects"],
-       "structure": "Document organization description",
-       "critical_elements": ["Important highlights"]
-     },
-     "extracted_data": {
-       // All extracted information organized by logical categories
-     },
-     "metadata": {
-       // Document metadata and extraction details
-     }
-   }
+4. EXTRACTION RULES:
+   - Include ONLY keys where corresponding data exists
+   - Remove empty objects and arrays
+   - Remove sections with no meaningful data
+   - Keep all three main sections even if some are minimal
+   - Use proper grammatical pluralization for array keys
+   - Create new appropriate keys if unique data is found
+   - Maintain data relationships in the structure
 
-5. FORMATTING RULES:
-   - Create logical groupings based on the actual content
-   - Use descriptive key names (lowercase_with_underscores)
-   - Preserve all numerical values without spaces or separators
-   - Format dates consistently as YYYY-MM-DD where possible
-   - Use arrays for multiple related items
-   - Nest related information in logical sub-objects
-   - Include null for explicitly mentioned but empty values
-   - Omit fields that are not present in the document
-   - Preserve exact original values for codes and identifiers
+5. ANALYSIS REQUIREMENTS:
+   - Base recommendations on actual extracted data
+   - Provide platform-specific insights when possible
+   - Include comparative analysis if benchmarks are available
+   - Consider audience behavior patterns
+   - Analyze engagement trends
+   - Evaluate content effectiveness
+   - Assess timing patterns
+   - Consider platform-specific features utilization
 
-6. SPECIAL HANDLING:
-   - If a piece of information could belong to multiple categories, include it in all relevant places
-   - For ambiguous information, include a confidence indicator
-   - For repeated information, capture all instances
-   - For structured tables, preserve the relationships between data
-   - For lists, maintain the original ordering
-
-Remember: The goal is to provide both a comprehensive summary and capture EVERYTHING present in the document, creating a complete picture of the content and its context.`;
+Remember:
+1. The three main sections (Description, Information, Recommendations) are mandatory
+2. Only include keys where actual data exists
+3. Use proper English words with first letter capitalized
+4. Base all recommendations on extracted data
+5. Ensure all available data is captured and categorized appropriately`;
     
     try {
         const result = await model.generateContent([
